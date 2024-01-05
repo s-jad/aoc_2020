@@ -5,20 +5,21 @@ fn dfs(
     graph: &HashMap<String, Vec<(usize, String)>>,
     bag: &str,
     visited: &mut HashMap<String, bool>,
-    count: &mut usize,
     multiplier: usize,
-) -> bool {
+) -> usize {
+    let mut count = 0;
+
     if bag != "shiny gold" {
-        *count += multiplier;
+        count += multiplier;
     }
 
     if let Some(bags) = graph.get(bag) {
         for (n, b) in bags {
-            dfs(graph, b, visited, count, *n * multiplier);
+            count += dfs(graph, b, visited, *n * multiplier);
         }
     }
 
-    false
+    count
 }
 
 fn process(input: &str) -> usize {
@@ -54,13 +55,10 @@ fn process(input: &str) -> usize {
         })
         .collect::<HashMap<String, Vec<(usize, String)>>>();
 
-    let mut count: usize = 0;
     let mut visited: HashMap<String, bool> = HashMap::new();
     let multiplier = 1;
 
-    dfs(&graph, "shiny gold", &mut visited, &mut count, multiplier);
-
-    count
+    dfs(&graph, "shiny gold", &mut visited, multiplier)
 }
 
 fn main() {
